@@ -1,0 +1,138 @@
+﻿@model VacationManagement.Models.RequestVacation
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>RequestVacation</h4>
+<hr />
+<form asp-action="Edit">
+<div class="row">
+    <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" readonly/>
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmployeeId" class="control-label"></label>
+                <select asp-for="EmployeeId" asp-items="@(new SelectList(ViewBag.Employees,"Id","Name"))" class="form-control">
+                <option value="">Select an Employee</option>    
+                </select>
+                <span asp-validation-for="EmployeeId" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="RequestDate" class="control-label"></label>
+                <input asp-for="RequestDate" class="form-control" />
+                <span asp-validation-for="RequestDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VacationTypeId" class="control-label"></label>
+                <select asp-for="VacationTypeId"
+                        asp-items="@(new SelectList(ViewBag.VactionTypes,"Id","VacationName"))"
+                        class="form-control">
+                    <option value="">Select Vaction Type...</option>
+                </select>
+                <span asp-validation-for="VacationTypeId" class="text-danger"></span>
+            </div>
+            <div class="row">
+            <div class="form-group col-md-6">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+                <div class="form-group col-md-6">
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comment" class="control-label"></label>
+                <textarea asp-for="Comment" class="form-control" ></textarea>
+                <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" style="width:25px;height:25px" asp-for="Approved" /> &ensp; @Html.DisplayNameFor(model => model.Approved)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+    </div>
+    <div class="col-md-6">
+        <h4>Vaction Dayes==>(<span class="text-danger" id="countVactions">0</span>)</h4>
+        
+            <table class="table">
+                <thead>
+                    <tr>
+                    <td>Id</td>
+                    <td>Date</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.VacationPlanList.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                <input asp-for="VacationPlanList[i].Id" readonly />
+                                <input asp-for="VacationPlanList[i].RequestVacationId" hidden />
+                            </td>
+                            <td>
+                                <input asp-for="VacationPlanList[i].VacationDate" readonly /> @*متعبي فيه داتا اوريدي بعثنا للفيو اوبجكت متعبي فلما نعمل اسبي فور فبتتخزن في الانبوت كفاليو *@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        
+    </div>
+</div>
+ </form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<script>
+    $(document).ready(() => {
+        GetVacationsCountFun(@Model.Id);
+    });
+</script>
+<script>
+    GetVacationsCountFun=(id)=> {
+        console.log("heee")
+        $.ajax({
+            url: `/VacationPlans/GetVacationsCount/${id}`,
+            method: "GET",
+            cache: false,
+            success: (data) => {
+                $('#countVactions').html(data)
+            }
+        })
+    }
+</script>
+@*<script>
+$(document).ready(() => {
+    alert()
+    GetVacationsCount(@Model.Id);
+});
+GetVacationsCount(id)=> {
+    console.log("heee")
+    $.ajax({
+        url: `/VacationPlans/GetVacationsCount/${id}`,
+        method: "GET",
+        cache: false,
+        success: (data) => {
+            $('#countVactions').html(data)
+        }
+    })
+}
+</script>*@
+
+
+
+    
